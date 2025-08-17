@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0
+
+Added
+
+- Universal conversions: `value.ok<E>()`, `value.some()`, and `'e'.err<T>()` for instant wrapping into Result/Option.
+- Kotlin/Rust-style ergonomic aliases:
+	- Result: `getOrNull()`, `getOrDefault(value)`, `getOrElse(fn)`.
+	- Option: `okOr(error)`, `okOrElse(fn)`, `orNull()`, `unwrapOr(value)`, `unwrapOrElse(fn)`.
+
+Changed
+
+- Docs mention universal conversions and aliases. Version bump to 0.3.0.
+
+---
+
 ## 0.2.0
 
 Added

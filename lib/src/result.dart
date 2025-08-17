@@ -64,6 +64,16 @@ sealed class Result<T, E> {
   /// {@end-tool}
   const factory Result.err(E error) = Err<T, E>;
 
+  // --- Ergonomic aliases (Rust/Kotlin-inspired) ---
+  /// Alias of [valueOrElse] named like Kotlin's getOrElse.
+  T getOrElse(T Function(E error) defaultValue) => valueOrElse(defaultValue);
+
+  /// Alias of [valueOr] named like Kotlin's getOrDefault.
+  T getOrDefault(T defaultValue) => valueOr(defaultValue);
+
+  /// Returns the success value if Ok, otherwise null (Kotlin-like getOrNull).
+  T? getOrNull() => toNullable();
+
   /// Creates a Result by executing [computation] and catching any exceptions.
   ///
   /// If [computation] completes successfully, returns [Ok] with the result.

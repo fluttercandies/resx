@@ -2,6 +2,26 @@ import 'dart:async';
 import 'result.dart';
 import 'option.dart';
 
+/// Quick conversions available on any non-null value.
+///
+/// - `value.ok<E>()` -> Result<T, E>
+/// - `value.some()` -> Option<T>
+extension AnyToResultAndOption<T> on T {
+  /// Wrap this value into an Ok result.
+  Result<T, E> ok<E>() => Result.ok(this);
+
+  /// Wrap this value into a Some option.
+  Option<T> some() => Option.some(this);
+}
+
+/// Quick conversion for any value as an error into a Result's Err side.
+///
+/// Usage: `'boom'.err<int>()` -> `Result<int, String>.err('boom')`.
+extension ToErr<E> on E {
+  /// Wrap this value into an Err result.
+  Result<T, E> err<T>() => Result.err(this);
+}
+
 /// Extension on nullable types to convert to Option.
 extension NullableToOption<T> on T? {
   /// Converts a nullable value to an Option.

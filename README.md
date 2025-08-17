@@ -139,13 +139,18 @@ final asResults = stream.toResultStream<Object>();
 final collected = await stream.collectToResult<Object>();
 ```
 
-### Nullable Extensions
+### Universal and Nullable Conversions
 
 ```dart
 String? nullable = getValue();
 final option = nullable.toOption(); // Option<String>
 
 final result = nullable.toResult('Value is null'); // Result<String, String>
+
+// Universal: wrap any value fast
+final r1 = 42.ok<String>();              // Result<int, String>::Ok(42)
+final r2 = 'boom'.err<int>();             // Result<int, String>::Err('boom')
+final o1 = 'hello'.some();                // Option<String>::Some('hello')
 ```
 
 ## Batch Operations
@@ -214,7 +219,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  resx: ^0.2.0
+  resx: ^0.3.0
 ```
 
 Then run:

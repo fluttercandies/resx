@@ -231,7 +231,19 @@ final message = userResult.fold(
 );
 ```
 
-### 状态管理
+### 通用与可空快速转换
+
+```dart
+String? nullable = getValue();
+final option = nullable.toOption(); // Option<String>
+
+final result = nullable.toResult('值为空'); // Result<String, String>
+
+// 通用：快速包装任意值
+final r1 = 42.ok<String>();          // Result<int, String>::Ok(42)
+final r2 = 'boom'.err<int>();         // Result<int, String>::Err('boom')
+final o1 = 'hello'.some();            // Option<String>::Some('hello')
+```
 
 ```dart
 class AppState {
@@ -287,7 +299,7 @@ AppState handleUsersLoaded(AppState state, Result<List<User>, String> result) {
 
 ```yaml
 dependencies:
-  resx: ^0.2.0
+  resx: ^0.3.0
 ```
 
 然后运行:

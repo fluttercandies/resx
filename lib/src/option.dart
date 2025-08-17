@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+
 import 'result.dart';
 
 /// A type that represents an optional value: either some [T] value or none.
@@ -67,6 +68,22 @@ sealed class Option<T> {
   factory Option.fromNullable(T? value) {
     return value != null ? Some(value) : None<T>();
   }
+
+  // --- Ergonomic aliases (Rust/Kotlin-inspired) ---
+  /// Alias to convert Option to Result with eager error (Rust ok_or).
+  Result<T, E> okOr<E>(E error) => toResult(error);
+
+  /// Alias to convert Option to Result with lazy error (Rust ok_or_else).
+  Result<T, E> okOrElse<E>(E Function() error) => toResultElse(error);
+
+  /// Returns value or null (Kotlin getOrNull).
+  T? orNull() => toNullable();
+
+  /// Returns value or default (Kotlin unwrapOr / getOrDefault style).
+  T unwrapOr(T defaultValue) => valueOr(defaultValue);
+
+  /// Returns value or evaluated default (Kotlin unwrapOrElse / getOrElse).
+  T unwrapOrElse(T Function() defaultValue) => valueOrElse(defaultValue);
 
   /// Returns `true` if the option is [Some].
   ///
@@ -467,9 +484,9 @@ sealed class Option<T> {
     return switch (this) {
       Some(:final value) => switch (other) {
           Some(value: final otherValue) => Some((value, otherValue)),
-          None() => const None<(T, U)>(),
+          None() => None<(T, U)>(),
         },
-      None() => const None<(T, U)>(),
+      None() => None<(T, U)>(),
     };
   }
 
@@ -907,7 +924,7 @@ abstract final class Options {
   static Option<(A, B)> zip<A, B>(Option<A> a, Option<B> b) {
     return switch ((a, b)) {
       (Some(:final value), Some(value: final valueB)) => Some((value, valueB)),
-      _ => const None<(A, B)>(),
+      _ => None<(A, B)>(),
     };
   }
 
@@ -924,7 +941,7 @@ abstract final class Options {
         Some(value: final valueC),
       ) =>
         Some((value, valueB, valueC)),
-      _ => const None<(A, B, C)>(),
+      _ => None<(A, B, C)>(),
     };
   }
 
