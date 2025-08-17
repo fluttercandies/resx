@@ -1,0 +1,27 @@
+name: resx
+description: "Functional error handling for Dart: Result/Option/Validation + AsyncResult, Stream/Iterable utils, and tiny state Loadable."
+version: 0.2.0
+repository: https://github.com/iota9star/resx
+homepage: https://github.com/iota9star/resx
+documentation: https://pub.dev/documentation/resx/latest/
+issue_tracker: https://github.com/iota9star/resx/issues
+
+environment:
+  sdk: ^3.3.0
+
+topics:
+  - result
+  - option
+  - validation
+  - functional-programming
+  - error-handling
+
+dependencies:
+  meta: ^1.15.0
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.24.0
+
+funding:
+  - https://github.com/sponsors/iota9star

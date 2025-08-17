@@ -1,0 +1,32 @@
+# Changelog
+
+## 0.2.0
+
+Added
+
+- Result: ensure/ensureElse to guard Ok values; swap to invert Ok/Err.
+- Results: sequence and partition utilities.
+- AsyncResult: ensure; AsyncResults.sequence/partition.
+- Stream extensions: toResultStream and collectToResult.
+- Tiny state management: Loadable (Loading/Data/Error) and LoadableController.
+
+Changed
+
+- Public library now exports stream_extensions.dart and loadable.dart.
+- README (EN/ZH) refreshed with new APIs and examples.
+
+Fixed
+
+- Minor doc comments and tests coverage; added tests for all new APIs.
+
+---
+
+## 0.1.0
+
+Initial release
+
+- Result with core ops (`ok`, `err`, `map`, `flatMap`, `fold`) and utilities (`Results.combine`, `Results.traverse`).
+- Option with `some`/`none`, map/flatMap/fold and utilities.
+- Validation with error accumulation and built-in validators.
+- AsyncResult (Future of Result) with async chaining; AsyncResults utilities.
+- Extensions for String/List/Map/Future/num/bool.
