@@ -4,7 +4,7 @@
 [![documentation](https://img.shields.io/badge/documentation-pub.dev-blue.svg)](https://pub.dev/documentation/resx/latest/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-A tiny-yet-complete functional error handling toolkit for Dart: Result, Option, Validation, AsyncResult, Stream helpers, and a minimal Loadable state.
+A tiny yet complete functional error handling toolkit for Dart: Result, Option, Validation, AsyncResult, Stream helpers, and a minimal Loadable state.
 
 **English** | [中文](README_zh.md)
 
@@ -211,22 +211,11 @@ final result = pipeline('user input');
 
 ## Performance
 
-Focused API, minimal indirections, idiomatic Dart sealed classes and extension types. No magic.
+Focused API, minimal indirections, idiomatic Dart sealed classes, and extension types. No magic.
 
-## Installation
+## Installing
 
-Add to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  resx: ^0.3.0
-```
-
-Then run:
-
-```bash
-dart pub get
-```
+See https://pub.dev/packages/resx/install.
 
 ## Examples
 
@@ -249,4 +238,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ for the Dart community
+Made with 💙 by FlutterCandies
