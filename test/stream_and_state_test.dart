@@ -10,11 +10,15 @@ void main() {
       final sub =
           controller.stream.toResultStream<String>().listen(results.add);
 
-      controller.add(1);
-      controller.add(2);
-      controller.addError('boom');
-      await controller.close();
-      await sub.asFuture<void>();
+      try {
+        controller.add(1);
+        controller.add(2);
+        controller.addError('boom');
+        await controller.close();
+        await sub.asFuture<void>();
+      } finally {
+        await sub.cancel();
+      }
 
       expect(results[0].isOk, isTrue);
       expect(results[1].isOk, isTrue);
@@ -38,6 +42,7 @@ void main() {
       final r2 = await controller.stream.collectToResult<Object>();
       expect(r2.isErr, isTrue);
       expect(r2.error, isA<ArgumentError>());
+      // controller stream already closed in the spawned future
     });
   });
 

@@ -1,10 +1,10 @@
 name: resx
 description: "Functional error handling for Dart: Result/Option/Validation + AsyncResult, Stream/Iterable utils, and tiny state Loadable."
-version: 0.3.0
-repository: https://github.com/iota9star/resx
-homepage: https://github.com/iota9star/resx
+version: 0.4.0
+repository: https://github.com/fluttercandies/resx
+homepage: https://github.com/fluttercandies/resx
 documentation: https://pub.dev/documentation/resx/latest/
-issue_tracker: https://github.com/iota9star/resx/issues
+issue_tracker: https://github.com/fluttercandies/resx/issues
 
 environment:
   sdk: ^3.3.0

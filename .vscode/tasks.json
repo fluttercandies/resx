@@ -1,0 +1,59 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "dart-test-and-dry-run",
+			"type": "shell",
+			"command": "dart --version >/dev/null 2>&1 || (echo \"Dart SDK not found\" && exit 1); dart pub get && dart analyze && dart test && dart pub publish --dry-run",
+			"problemMatcher": [
+				"$dart-build"
+			],
+			"group": "build"
+		},
+		{
+			"label": "dart-analyze-test-dryrun-2",
+			"type": "shell",
+			"command": "dart pub get && dart analyze && dart test && dart pub publish --dry-run",
+			"problemMatcher": [
+				"$dart-build"
+			],
+			"group": "build"
+		},
+		{
+			"label": "dart-analyze-test-dryrun-3",
+			"type": "shell",
+			"command": "dart analyze && dart test && dart pub publish --dry-run",
+			"problemMatcher": [
+				"$dart-build"
+			],
+			"group": "build"
+		},
+		{
+			"label": "dart-analyze-test-dryrun-4",
+			"type": "shell",
+			"command": "dart analyze && dart test && dart pub publish --dry-run",
+			"problemMatcher": [
+				"$dart-build"
+			],
+			"group": "build"
+		},
+		{
+			"label": "analyze-test-dryrun-0.4.0",
+			"type": "shell",
+			"command": "dart analyze && dart test && dart pub publish --dry-run",
+			"problemMatcher": [
+				"$dart-build"
+			],
+			"group": "build"
+		},
+		{
+			"label": "final-analyze-test-dryrun-0.4.0",
+			"type": "shell",
+			"command": "dart analyze && dart test && dart pub publish --dry-run",
+			"problemMatcher": [
+				"$dart-build"
+			],
+			"group": "build"
+		}
+	]
+}

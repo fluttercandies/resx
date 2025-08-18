@@ -8,7 +8,7 @@ import 'option.dart';
 /// operations that can fail without using exceptions. Results provide a type-safe
 /// way to handle both the success and error cases.
 ///
-/// {@tool snippet}
+///
 ///
 /// Basic usage:
 ///
@@ -23,9 +23,9 @@ import 'option.dart';
 /// print(error.isErr); // true
 /// print(error.error); // 'Something went wrong'
 /// ```
-/// {@end-tool}
 ///
-/// {@tool snippet}
+///
+///
 ///
 /// Chaining operations:
 ///
@@ -35,33 +35,33 @@ import 'option.dart';
 ///     .flatMap((x) => x > 5 ? Result.ok('Success: $x') : Result.err('Too small'));
 /// print(result); // Ok(Success: 10)
 /// ```
-/// {@end-tool}
+///
 @immutable
 sealed class Result<T, E> {
   const Result();
 
   /// Creates a success result containing [value].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Result.ok('Hello World');
   /// print(result.isOk); // true
   /// print(result.value); // 'Hello World'
   /// ```
-  /// {@end-tool}
+  ///
   const factory Result.ok(T value) = Ok<T, E>;
 
   /// Creates an error result containing [error].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Result.err('Something went wrong');
   /// print(result.isErr); // true
   /// print(result.error); // 'Something went wrong'
   /// ```
-  /// {@end-tool}
+  ///
   const factory Result.err(E error) = Err<T, E>;
 
   // --- Ergonomic aliases (Rust/Kotlin-inspired) ---
@@ -79,7 +79,7 @@ sealed class Result<T, E> {
   /// If [computation] completes successfully, returns [Ok] with the result.
   /// If it throws, returns [Err] with the exception.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// // Successful computation
@@ -90,7 +90,7 @@ sealed class Result<T, E> {
   /// final result2 = Result.from(() => int.parse('not a number'));
   /// print(result2.isErr); // true
   /// ```
-  /// {@end-tool}
+  ///
   factory Result.from(T Function() computation) {
     try {
       return Ok(computation());
@@ -101,7 +101,7 @@ sealed class Result<T, E> {
 
   /// Creates a Result from a [Future] by executing [computation] and catching any exceptions.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// // Successful async computation
@@ -114,7 +114,7 @@ sealed class Result<T, E> {
   /// });
   /// print(result2.isErr); // true
   /// ```
-  /// {@end-tool}
+  ///
   static Future<Result<T, E>> fromAsync<T, E>(
     Future<T> Function() computation,
   ) async {
@@ -129,6 +129,17 @@ sealed class Result<T, E> {
   /// Ensures the [predicate] holds for an [Ok] value, otherwise converts it to [Err] with [error].
   ///
   /// If this is already [Err], it is returned unchanged.
+  ///
+  /// ```dart
+  /// final r1 = Result.ok(10).ensure((v) => v > 5, 'too small');
+  /// print(r1); // Ok(10)
+  ///
+  /// final r2 = Result.ok(3).ensure((v) => v > 5, 'too small');
+  /// print(r2); // Err('too small')
+  ///
+  /// final r3 = Result<int, String>.err('boom').ensure((v) => v > 5, 'x');
+  /// print(r3); // Err('boom')
+  /// ```
   Result<T, E> ensure(bool Function(T value) predicate, E error) {
     return switch (this) {
       Ok(:final value) => predicate(value) ? this : Err(error),
@@ -138,6 +149,14 @@ sealed class Result<T, E> {
 
   /// Ensures the [predicate] holds for an [Ok] value, otherwise converts it to [Err]
   /// with a lazily computed error from [error]. If this is already [Err], returns it unchanged.
+  ///
+  /// ```dart
+  /// final r1 = Result.ok(10).ensureElse((v) => v > 5, (v) => 'too small: $v');
+  /// print(r1); // Ok(10)
+  ///
+  /// final r2 = Result.ok(3).ensureElse((v) => v > 5, (v) => 'too small: $v');
+  /// print(r2); // Err('too small: 3')
+  /// ```
   Result<T, E> ensureElse(
       bool Function(T value) predicate, E Function(T value) error) {
     return switch (this) {
@@ -148,7 +167,7 @@ sealed class Result<T, E> {
 
   /// Returns `true` if the result is [Ok].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -157,12 +176,12 @@ sealed class Result<T, E> {
   /// print(success.isOk); // true
   /// print(failure.isOk); // false
   /// ```
-  /// {@end-tool}
+  ///
   bool get isOk => this is Ok<T, E>;
 
   /// Returns `true` if the result is [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -171,12 +190,12 @@ sealed class Result<T, E> {
   /// print(success.isErr); // false
   /// print(failure.isErr); // true
   /// ```
-  /// {@end-tool}
+  ///
   bool get isErr => this is Err<T, E>;
 
   /// Returns the success value if [Ok], otherwise throws.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -185,7 +204,7 @@ sealed class Result<T, E> {
   /// final failure = Result.err('error');
   /// // failure.value; // throws StateError
   /// ```
-  /// {@end-tool}
+  ///
   T get value {
     return switch (this) {
       Ok(:final value) => value,
@@ -195,7 +214,7 @@ sealed class Result<T, E> {
 
   /// Returns the error value if [Err], otherwise throws.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final failure = Result.err('error');
@@ -204,7 +223,7 @@ sealed class Result<T, E> {
   /// final success = Result.ok(42);
   /// // success.error; // throws StateError
   /// ```
-  /// {@end-tool}
+  ///
   E get error {
     return switch (this) {
       Ok(:final value) => throw StateError('Called error on Ok: $value'),
@@ -214,7 +233,7 @@ sealed class Result<T, E> {
 
   /// Returns the success value if [Ok], otherwise returns [defaultValue].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -223,7 +242,7 @@ sealed class Result<T, E> {
   /// print(success.valueOr(0)); // 42
   /// print(failure.valueOr(0)); // 0
   /// ```
-  /// {@end-tool}
+  ///
   T valueOr(T defaultValue) {
     return switch (this) {
       Ok(:final value) => value,
@@ -233,7 +252,7 @@ sealed class Result<T, E> {
 
   /// Returns the success value if [Ok], otherwise returns the result of [defaultValue].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -243,7 +262,7 @@ sealed class Result<T, E> {
   /// print(failure.valueOrElse(() => 0)); // 0
   /// print(failure.valueOrElse(() => DateTime.now().millisecond)); // dynamic default
   /// ```
-  /// {@end-tool}
+  ///
   T valueOrElse(T Function(E error) defaultValue) {
     return switch (this) {
       Ok(:final value) => value,
@@ -253,7 +272,7 @@ sealed class Result<T, E> {
 
   /// Maps a [Result<T, E>] to [Result<U, E>] by applying a function to the success value.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Result.ok(5);
@@ -264,7 +283,7 @@ sealed class Result<T, E> {
   /// final mapped = error.map((x) => x * 2);
   /// print(mapped); // Err('error')
   /// ```
-  /// {@end-tool}
+  ///
   Result<U, E> map<U>(U Function(T value) fn) {
     return switch (this) {
       Ok(:final value) => Ok(fn(value)),
@@ -274,7 +293,7 @@ sealed class Result<T, E> {
 
   /// Maps a [Result<T, E>] to [Result<T, F>] by applying a function to the error value.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -285,7 +304,7 @@ sealed class Result<T, E> {
   /// final mappedErr = error.mapErr((e) => 'Error: $e');
   /// print(mappedErr); // Err('Error: network failure')
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, F> mapErr<F>(F Function(E error) fn) {
     return switch (this) {
       Ok(:final value) => Ok(value),
@@ -297,7 +316,7 @@ sealed class Result<T, E> {
   ///
   /// Applies [onSuccess] to the success value if [Ok], or [onError] to the error value if [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -314,7 +333,7 @@ sealed class Result<T, E> {
   /// );
   /// print(mappedErr); // Err('Error: failure')
   /// ```
-  /// {@end-tool}
+  ///
   Result<U, F> bimap<U, F>(
     U Function(T value) onSuccess,
     F Function(E error) onError,
@@ -328,7 +347,7 @@ sealed class Result<T, E> {
   /// Maps the success value with a function that returns a [Result].
   /// This is also known as flatMap or bind in other languages.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Result.ok('42');
@@ -351,7 +370,7 @@ sealed class Result<T, E> {
   /// });
   /// print(failed); // Err('Parse error')
   /// ```
-  /// {@end-tool}
+  ///
   Result<U, E> flatMap<U>(Result<U, E> Function(T value) fn) {
     return switch (this) {
       Ok(:final value) => fn(value),
@@ -361,7 +380,7 @@ sealed class Result<T, E> {
 
   /// Maps the error value with a function that returns a [Result].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(42);
@@ -372,7 +391,7 @@ sealed class Result<T, E> {
   /// final recovered2 = error.flatMapErr((e) => Result.ok(0));
   /// print(recovered2); // Ok(0)
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, F> flatMapErr<F>(Result<T, F> Function(E error) fn) {
     return switch (this) {
       Ok(:final value) => Ok(value),
@@ -382,7 +401,7 @@ sealed class Result<T, E> {
 
   /// Executes [fn] if the result is [Ok] and returns this result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Ok(42);
@@ -393,7 +412,7 @@ sealed class Result<T, E> {
   /// error.tap((value) => print('This won\'t print'));
   /// // error is still Err('failed')
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> tap(void Function(T value) fn) {
     if (this case Ok(:final value)) {
       fn(value);
@@ -403,7 +422,7 @@ sealed class Result<T, E> {
 
   /// Executes [fn] if the result is [Err] and returns this result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -414,7 +433,7 @@ sealed class Result<T, E> {
   /// error.tapErr((err) => print('Got error: $err')); // prints: Got error: failed
   /// // error is still Err('failed')
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> tapErr(void Function(E error) fn) {
     if (this case Err(:final error)) {
       fn(error);
@@ -424,7 +443,7 @@ sealed class Result<T, E> {
 
   /// Returns this result if it is [Ok], otherwise returns [other].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -434,7 +453,7 @@ sealed class Result<T, E> {
   /// final failure = Err('error');
   /// print(failure.or(backup)); // Ok(0)
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> or(Result<T, E> other) {
     return switch (this) {
       Ok() => this,
@@ -444,7 +463,7 @@ sealed class Result<T, E> {
 
   /// Returns this result if it is [Ok], otherwise returns the result of [other].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -454,7 +473,7 @@ sealed class Result<T, E> {
   /// print(failure.orElse((error) => Ok(-1))); // Ok(-1)
   /// print(failure.orElse((error) => Err('fallback: $error'))); // Err('fallback: network error')
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> orElse(Result<T, E> Function(E error) other) {
     return switch (this) {
       Ok() => this,
@@ -464,7 +483,7 @@ sealed class Result<T, E> {
 
   /// Returns [other] if this result is [Ok], otherwise returns this result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -474,7 +493,7 @@ sealed class Result<T, E> {
   /// final failure = Err('error');
   /// print(failure.and(next)); // Err('error')
   /// ```
-  /// {@end-tool}
+  ///
   Result<U, E> and<U>(Result<U, E> other) {
     return switch (this) {
       Ok() => other,
@@ -484,7 +503,7 @@ sealed class Result<T, E> {
 
   /// Returns the result of [other] if this result is [Ok], otherwise returns this result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(5);
@@ -495,7 +514,7 @@ sealed class Result<T, E> {
   /// final processed = failure.andThen((value) => Ok(value * 2));
   /// print(processed); // Err('error')
   /// ```
-  /// {@end-tool}
+  ///
   Result<U, E> andThen<U>(Result<U, E> Function(T value) other) {
     return switch (this) {
       Ok(:final value) => other(value),
@@ -505,7 +524,7 @@ sealed class Result<T, E> {
 
   /// Executes [onOk] if the result is [Ok], or [onErr] if it is [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -522,7 +541,7 @@ sealed class Result<T, E> {
   /// );
   /// print(errorMessage); // 'Error: failed'
   /// ```
-  /// {@end-tool}
+  ///
   R fold<R>(R Function(T value) onOk, R Function(E error) onErr) {
     return switch (this) {
       Ok(:final value) => onOk(value),
@@ -531,6 +550,14 @@ sealed class Result<T, E> {
   }
 
   /// Swaps [Ok] and [Err], turning a [Result<T, E>] into [Result<E, T>].
+  ///
+  /// ```dart
+  /// final swapped1 = Result.ok(1).swap();
+  /// print(swapped1); // Err(1)
+  ///
+  /// final swapped2 = Result<int, String>.err('e').swap();
+  /// print(swapped2); // Ok('e')
+  /// ```
   Result<E, T> swap() {
     return switch (this) {
       Ok(:final value) => Err(value),
@@ -540,7 +567,7 @@ sealed class Result<T, E> {
 
   /// Executes [onOk] if the result is [Ok], or [onErr] if it is [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -555,7 +582,7 @@ sealed class Result<T, E> {
   ///   (error) => print('Error: $error'),
   /// ); // prints: Error: failed
   /// ```
-  /// {@end-tool}
+  ///
   void match(void Function(T value) onOk, void Function(E error) onErr) {
     switch (this) {
       case Ok(:final value):
@@ -567,7 +594,7 @@ sealed class Result<T, E> {
 
   /// Converts the result to a nullable value, returning null for [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -576,7 +603,7 @@ sealed class Result<T, E> {
   /// final failure = Err('error');
   /// print(failure.toNullable()); // null
   /// ```
-  /// {@end-tool}
+  ///
   T? toNullable() {
     return switch (this) {
       Ok(:final value) => value,
@@ -586,7 +613,7 @@ sealed class Result<T, E> {
 
   /// Converts the result to a list, returning an empty list for [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -595,7 +622,7 @@ sealed class Result<T, E> {
   /// final failure = Err('error');
   /// print(failure.toList()); // []
   /// ```
-  /// {@end-tool}
+  ///
   List<T> toList() {
     return switch (this) {
       Ok(:final value) => [value],
@@ -605,7 +632,7 @@ sealed class Result<T, E> {
 
   /// Returns an iterator that yields the value if [Ok], or nothing if [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Ok(42);
@@ -622,7 +649,7 @@ sealed class Result<T, E> {
   /// print(success.toIterable().toList()); // [42]
   /// print(failure.toIterable().toList()); // []
   /// ```
-  /// {@end-tool}
+  ///
   Iterable<T> toIterable() {
     return switch (this) {
       Ok(:final value) => [value],
@@ -649,7 +676,7 @@ sealed class Result<T, E> {
 
   /// Flattens a nested Result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final nested = Result.ok(Result.ok(42));
@@ -660,7 +687,7 @@ sealed class Result<T, E> {
   /// final flattenedErr = nestedErr.flatten();
   /// print(flattenedErr); // Err('inner error')
   /// ```
-  /// {@end-tool}
+  ///
   Result<U, E> flatten<U>() {
     return switch (this) {
       Ok(:final value) when value is Result<U, E> => value as Result<U, E>,
@@ -673,7 +700,7 @@ sealed class Result<T, E> {
 
   /// Performs a side effect without changing the Result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Result.ok(42)
@@ -682,7 +709,7 @@ sealed class Result<T, E> {
   /// // Prints: Success: 42
   /// print(result); // Ok(84)
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> inspect(void Function(T value) fn) {
     return switch (this) {
       Ok(:final value) => () {
@@ -695,7 +722,7 @@ sealed class Result<T, E> {
 
   /// Performs a side effect on the error without changing the Result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Result.err('network failure')
@@ -704,7 +731,7 @@ sealed class Result<T, E> {
   /// // Prints: Error occurred: network failure
   /// print(result); // Ok(0)
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> inspectErr(void Function(E error) fn) {
     return switch (this) {
       Ok() => this,
@@ -717,7 +744,7 @@ sealed class Result<T, E> {
 
   /// Transposes a Result of an Option into an Option of a Result.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final success = Result.ok(Option.some(42));
@@ -732,7 +759,7 @@ sealed class Result<T, E> {
   /// final transposedErr = failure.transpose();
   /// print(transposedErr); // Some(Err('error'))
   /// ```
-  /// {@end-tool}
+  ///
   Option<Result<U, E>> transpose<U>() {
     return switch (this) {
       Ok(:final value) when value is Option<U> => () {
@@ -786,7 +813,7 @@ abstract final class Results {
   /// Combines multiple Results into a single Result containing a list.
   /// Returns [Ok] with all values if all results are [Ok], otherwise returns the first [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final results = [Result.ok(1), Result.ok(2), Result.ok(3)];
@@ -797,7 +824,7 @@ abstract final class Results {
   /// final failed = Results.combine(mixedResults);
   /// print(failed); // Err('error')
   /// ```
-  /// {@end-tool}
+  ///
   static Result<List<T>, E> combine<T, E>(Iterable<Result<T, E>> results) {
     final values = <T>[];
     for (final result in results) {
@@ -813,7 +840,7 @@ abstract final class Results {
 
   /// Traverses a list of values, applying [fn] to each and collecting the results.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final numbers = ['1', '2', '3'];
@@ -823,7 +850,7 @@ abstract final class Results {
   /// );
   /// print(parsed); // Ok([1, 2, 3])
   /// ```
-  /// {@end-tool}
+  ///
   static Result<List<U>, E> traverse<T, U, E>(
     Iterable<T> values,
     Result<U, E> Function(T) fn,
@@ -834,7 +861,7 @@ abstract final class Results {
 
   /// Creates a Result from a nullable value.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final value = Results.fromNullable(42, 'Value is null');
@@ -843,14 +870,14 @@ abstract final class Results {
   /// final nullValue = Results.fromNullable<int, String>(null, 'Value is null');
   /// print(nullValue); // Err('Value is null')
   /// ```
-  /// {@end-tool}
+  ///
   static Result<T, E> fromNullable<T, E>(T? value, E error) {
     return value != null ? Ok(value) : Err(error);
   }
 
   /// Applies a function to the values inside two Results.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final a = Result.ok(2);
@@ -858,7 +885,7 @@ abstract final class Results {
   /// final result = Results.lift2(a, b, (x, y) => x + y);
   /// print(result); // Ok(5)
   /// ```
-  /// {@end-tool}
+  ///
   static Result<C, E> lift2<A, B, C, E>(
     Result<A, E> a,
     Result<B, E> b,

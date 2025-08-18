@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0
+
+Added
+
+- Added example code block to every public method across the library, including:
+	- Core types: Result, Option, Validation, AsyncResult
+	- Utilities: Results/Options helpers, Iterable/Stream extensions
+	- State: Loadable and LoadableController
+- Stream extensions and Loadable APIs now include inline examples.
+
+Changed
+
+- Polish English/Chinese README again with clarifications and emoji.
+- Bumped version to 0.4.0.
+
+---
+
 ## 0.3.0
 
 Added

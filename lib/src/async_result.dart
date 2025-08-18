@@ -6,7 +6,7 @@ import 'result.dart';
 /// AsyncResult simplifies working with asynchronous operations that can fail,
 /// providing a chainable API for async Result operations.
 ///
-/// {@tool snippet}
+///
 ///
 /// ```dart
 /// // Creating AsyncResults
@@ -21,7 +21,7 @@ import 'result.dart';
 /// final finalResult = await result;
 /// print(finalResult); // Ok('10')
 /// ```
-/// {@end-tool}
+///
 extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
     implements Future<Result<T, E>> {
   /// Creates an AsyncResult from a Future<T>.
@@ -29,7 +29,7 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// If the future completes successfully, wraps the result in Ok.
   /// If the future completes with an error, wraps it in Err.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// Future<String> apiCall() async => 'data';
@@ -38,7 +38,7 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// final result = await asyncResult;
   /// print(result); // Ok('data')
   /// ```
-  /// {@end-tool}
+  ///
   static AsyncResult<T, E> from<T, E>(Future<T> future) {
     return AsyncResult(
       future
@@ -49,40 +49,50 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
 
   /// Creates an AsyncResult that immediately resolves to Ok.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.ok('immediate value');
   /// final result = await asyncResult;
   /// print(result); // Ok('immediate value')
   /// ```
-  /// {@end-tool}
+  ///
   static AsyncResult<T, E> ok<T, E>(T value) {
     return AsyncResult(Future.value(Result.ok(value)));
   }
 
   /// Creates an AsyncResult that immediately resolves to Err.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.err('immediate error');
   /// final result = await asyncResult;
   /// print(result); // Err('immediate error')
   /// ```
-  /// {@end-tool}
+  ///
   static AsyncResult<T, E> err<T, E>(E error) {
     return AsyncResult(Future.value(Result.err(error)));
   }
 
   /// Ensures predicate holds for Ok, otherwise converts to Err with provided error.
+  ///
+  /// ```dart
+  /// final ar1 = AsyncResult.ok<int, String>(10)
+  ///   .ensure((v) => v > 5, 'too small');
+  /// print(await ar1); // Ok(10)
+  ///
+  /// final ar2 = AsyncResult.ok<int, String>(3)
+  ///   .ensure((v) => v > 5, 'too small');
+  /// print(await ar2); // Err('too small')
+  /// ```
   AsyncResult<T, E> ensure(bool Function(T) predicate, E error) {
     return AsyncResult(_future.then((r) => r.ensure(predicate, error)));
   }
 
   /// Maps the success value if Ok.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.ok(21);
@@ -90,14 +100,14 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// final result = await doubled;
   /// print(result); // Ok(42)
   /// ```
-  /// {@end-tool}
+  ///
   AsyncResult<U, E> map<U>(U Function(T) fn) {
     return AsyncResult(_future.then((result) => result.map(fn)));
   }
 
   /// Maps the error value if Err.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.err<int, String>('error');
@@ -105,14 +115,14 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// final result = await mapped;
   /// print(result); // Err('Wrapped: error')
   /// ```
-  /// {@end-tool}
+  ///
   AsyncResult<T, F> mapErr<F>(F Function(E) fn) {
     return AsyncResult(_future.then((result) => result.mapErr(fn)));
   }
 
   /// Chains another AsyncResult operation.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.ok('42');
@@ -121,7 +131,7 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// final result = await chained;
   /// print(result); // Ok(42)
   /// ```
-  /// {@end-tool}
+  ///
   AsyncResult<U, E> flatMap<U>(AsyncResult<U, E> Function(T) fn) {
     return AsyncResult(_future.then((result) async {
       return switch (result) {
@@ -133,7 +143,7 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
 
   /// Handles both success and error cases.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.ok(42);
@@ -144,14 +154,14 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// final result = await handled;
   /// print(result); // 'Success: 42'
   /// ```
-  /// {@end-tool}
+  ///
   Future<U> fold<U>(U Function(T) onOk, U Function(E) onErr) {
     return _future.then((result) => result.fold(onOk, onErr));
   }
 
   /// Recovers from an error with a new AsyncResult.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResult = AsyncResult.err<int, String>('error');
@@ -159,7 +169,7 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   /// final result = await recovered;
   /// print(result); // Ok(0)
   /// ```
-  /// {@end-tool}
+  ///
   AsyncResult<T, E> orElse(AsyncResult<T, E> Function(E) fn) {
     return AsyncResult(_future.then((result) async {
       return switch (result) {
@@ -170,6 +180,13 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   }
 
   /// Executes [fn] if the result is [Ok] and returns this result.
+  ///
+  /// ```dart
+  /// final logs = <String>[];
+  /// await AsyncResult.ok(1)
+  ///   .tap((v) => logs.add('v=$v'));
+  /// // logs contains 'v=1'
+  /// ```
   AsyncResult<T, E> tap(void Function(T value) fn) {
     return AsyncResult(_future.then((result) {
       if (result case Ok(:final value)) {
@@ -180,6 +197,13 @@ extension type AsyncResult<T, E>(Future<Result<T, E>> _future)
   }
 
   /// Executes [fn] if the result is [Err] and returns this result.
+  ///
+  /// ```dart
+  /// final logs = <String>[];
+  /// await AsyncResult.err<int, String>('e')
+  ///   .tapErr((e) => logs.add(e));
+  /// // logs contains 'e'
+  /// ```
   AsyncResult<T, E> tapErr(void Function(E error) fn) {
     return AsyncResult(_future.then((result) {
       if (result case Err(:final error)) {
@@ -195,7 +219,7 @@ abstract final class AsyncResults {
   /// Combines multiple AsyncResults into a single AsyncResult containing a list.
   /// Returns [Ok] with all values if all results are [Ok], otherwise returns the first [Err].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final asyncResults = [
@@ -206,7 +230,7 @@ abstract final class AsyncResults {
   /// final combined = await AsyncResults.combine(asyncResults);
   /// print(combined); // Ok([1, 2, 3])
   /// ```
-  /// {@end-tool}
+  ///
   static Future<Result<List<T>, E>> combine<T, E>(
     Iterable<Future<Result<T, E>>> asyncResults,
   ) async {
@@ -216,7 +240,7 @@ abstract final class AsyncResults {
 
   /// Traverses a list of values, applying [fn] to each and collecting the results.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final numbers = ['1', '2', '3'];
@@ -226,7 +250,7 @@ abstract final class AsyncResults {
   /// );
   /// print(parsed); // Ok([1, 2, 3])
   /// ```
-  /// {@end-tool}
+  ///
   static Future<Result<List<U>, E>> traverse<T, U, E>(
     Iterable<T> values,
     Future<Result<U, E>> Function(T) fn,
@@ -236,12 +260,30 @@ abstract final class AsyncResults {
   }
 
   /// Sequences a list of AsyncResults into a single AsyncResult of list.
+  ///
+  /// ```dart
+  /// final seq = await AsyncResults.sequence<int, String>([
+  ///   AsyncResult.ok(1),
+  ///   AsyncResult.ok(2),
+  /// ]);
+  /// print(seq); // Ok([1, 2])
+  /// ```
   static Future<Result<List<T>, E>> sequence<T, E>(
     Iterable<Future<Result<T, E>>> asyncResults,
   ) =>
       combine(asyncResults);
 
   /// Partitions results into (oks, errs) preserving order.
+  ///
+  /// ```dart
+  /// final (oks, errs) = await AsyncResults.partition<int, String>([
+  ///   AsyncResult.ok(1),
+  ///   AsyncResult.err('e'),
+  ///   AsyncResult.ok(3),
+  /// ]);
+  /// print(oks); // [1, 3]
+  /// print(errs); // ['e']
+  /// ```
   static Future<(List<T>, List<E>)> partition<T, E>(
     Iterable<Future<Result<T, E>>> asyncResults,
   ) async {

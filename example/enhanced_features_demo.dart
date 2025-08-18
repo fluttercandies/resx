@@ -167,8 +167,8 @@ void demonstrateExtensions() {
   print('Name as Option: $nameOption');
 
   const emptyName = '';
-  final emptyOption = emptyName.toOption();
-  print('Empty name as Option: $emptyOption');
+  final emptyOption = emptyName.nonEmpty();
+  print('Empty name as Option via nonEmpty: $emptyOption');
 
   // List extensions
   const numbers = [1, 2, 3, 4, 5];

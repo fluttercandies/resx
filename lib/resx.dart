@@ -21,7 +21,6 @@
 /// - ⚡ **Async Support** - First-class async/await integration
 /// - 🧩 **Extensions** - Native Dart type integrations
 ///
-/// {@tool snippet}
 /// Basic usage example:
 /// ```dart
 /// import 'package:resx/resx.dart';
@@ -41,7 +40,6 @@
 ///   .and(Validation.valid(25))
 ///   .and(Validation.valid('John'));
 /// ```
-/// {@end-tool}
 library resx;
 
 export 'src/result.dart';

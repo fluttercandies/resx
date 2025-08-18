@@ -1,4 +1,4 @@
-# Resx
+# Resx ⚡️
 
 [![pub package](https://img.shields.io/pub/v/resx.svg)](https://pub.dev/packages/resx)
 [![documentation](https://img.shields.io/badge/documentation-pub.dev-blue.svg)](https://pub.dev/documentation/resx/latest/)
@@ -8,7 +8,7 @@
 
 [English](README.md) | **中文**
 
-## 特性
+## 特性 ✨
 
 🚀 **高性能** - 为速度和内存效率优化  
 🔒 **类型安全** - 完全空安全和强类型  
@@ -18,9 +18,9 @@
 ⚡ **异步支持** - 一流的 async/await 集成  
 🧩 **扩展** - 原生 Dart 类型集成
 
-## 核心类型
+## 核心类型 🧠
 
-### Result&lt;T, E&gt; - 错误处理
+### Result&lt;T, E&gt; - 错误处理 ✅/❌
 
 受 Rust Result 类型启发的类型安全错误处理。
 
@@ -51,7 +51,7 @@ final ensured = Result.ok(10).ensure((v) => v > 5, '太小');
 final swapped = Result.ok(1).swap(); // Err(1)
 ```
 
-### Option&lt;T&gt; - 可空值
+### Option&lt;T&gt; - 可空值 ❓
 
 使用 Some/None 变体安全处理可空值。
 
@@ -100,20 +100,25 @@ final ensuredAsync = await AsyncResult.ok<int, String>(10)
   .ensure((v) => v > 0, '非正数');
 ```
 
-## Dart 扩展
+## Dart 扩展 🧩
 
-### String 扩展
+### String 扩展 🔤
 
 ```dart
 // 转换为 Option
-final name = 'John'.toOption(); // Some('John')
-final empty = ''.toOption(); // None
+final name = 'John'.some(); // Some('John')
+// 仅 null -> None，如需过滤空串请用 nonEmpty()
+final empty = ''.nonEmpty(); // None
+
+// 解析数字（Result）
+final ok = '42'.parseInt(); // Ok(42)
+final err = 'abc'.parseInt(); // Err(FormatException)
 
 // 转换为 Result
 final result = 'valid'.toResult('错误信息');
 ```
 
-### List/Stream/Nullable 扩展
+### List/Stream/Nullable 扩展 🔁
 
 ```dart
 final numbers = [1, 2, 3, 4, 5];
@@ -295,7 +300,18 @@ AppState handleUsersLoaded(AppState state, Result<List<User>, String> result) {
 
 ## 安装
 
-查阅 https://pub-web.flutter-io.cn/packages/resx/install 。
+添加到你的 `pubspec.yaml`:
+
+```yaml
+dependencies:
+  resx: any
+```
+
+然后运行:
+
+```bash
+dart pub get
+```
 
 ## 示例
 

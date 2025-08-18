@@ -7,7 +7,7 @@ import 'result.dart';
 /// collects all validation errors, making it useful for form validation
 /// and data validation scenarios.
 ///
-/// {@tool snippet}
+///
 ///
 /// ```dart
 /// // Creating Validations
@@ -24,50 +24,50 @@ import 'result.dart';
 ///   validation.errors.forEach(print); // prints all errors at once
 /// }
 /// ```
-/// {@end-tool}
+///
 @immutable
 sealed class Validation<E, T> {
   const Validation();
 
   /// Creates a [Valid] containing [value].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final validation = Validation.valid(42);
   /// print(validation.isValid); // true
   /// print(validation.value); // 42
   /// ```
-  /// {@end-tool}
+  ///
   const factory Validation.valid(T value) = Valid<E, T>;
 
   /// Creates an [Invalid] containing [errors].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final validation = Validation.invalid<String, int>(['error1', 'error2']);
   /// print(validation.isInvalid); // true
   /// print(validation.errors); // ['error1', 'error2']
   /// ```
-  /// {@end-tool}
+  ///
   const factory Validation.invalid(List<E> errors) = Invalid<E, T>;
 
   /// Creates an [Invalid] containing a single [error].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final validation = Validation.invalidSingle<String, int>('single error');
   /// print(validation.isInvalid); // true
   /// print(validation.errors); // ['single error']
   /// ```
-  /// {@end-tool}
+  ///
   factory Validation.invalidSingle(E error) = Invalid.single;
 
   /// Creates a Validation by executing [computation] and catching any exceptions.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// // Successful computation
@@ -78,7 +78,7 @@ sealed class Validation<E, T> {
   /// final result2 = Validation.from<Object, int>(() => int.parse('invalid'));
   /// print(result2.isInvalid); // true
   /// ```
-  /// {@end-tool}
+  ///
   factory Validation.from(T Function() computation) {
     try {
       return Valid(computation());
@@ -89,7 +89,7 @@ sealed class Validation<E, T> {
 
   /// Returns `true` if the validation is [Valid].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final valid = Validation.valid(42);
@@ -98,12 +98,12 @@ sealed class Validation<E, T> {
   /// print(valid.isValid); // true
   /// print(invalid.isValid); // false
   /// ```
-  /// {@end-tool}
+  ///
   bool get isValid => this is Valid<E, T>;
 
   /// Returns `true` if the validation is [Invalid].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final valid = Validation.valid(42);
@@ -112,12 +112,12 @@ sealed class Validation<E, T> {
   /// print(valid.isInvalid); // false
   /// print(invalid.isInvalid); // true
   /// ```
-  /// {@end-tool}
+  ///
   bool get isInvalid => this is Invalid<E, T>;
 
   /// Returns the success value if [Valid], otherwise throws.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final valid = Validation.valid(42);
@@ -126,7 +126,7 @@ sealed class Validation<E, T> {
   /// final invalid = Validation.invalid<String, int>(['error']);
   /// // invalid.value; // throws StateError
   /// ```
-  /// {@end-tool}
+  ///
   T get value {
     return switch (this) {
       Valid(:final value) => value,
@@ -138,7 +138,7 @@ sealed class Validation<E, T> {
 
   /// Returns the errors if [Invalid], otherwise throws.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final invalid = Validation.invalid<String, int>(['error1', 'error2']);
@@ -147,7 +147,7 @@ sealed class Validation<E, T> {
   /// final valid = Validation.valid(42);
   /// // valid.errors; // throws StateError
   /// ```
-  /// {@end-tool}
+  ///
   List<E> get errors {
     return switch (this) {
       Valid(:final value) => throw StateError('Called errors on Valid: $value'),
@@ -156,6 +156,11 @@ sealed class Validation<E, T> {
   }
 
   /// Returns the success value if [Valid], otherwise returns [defaultValue].
+  ///
+  /// ```dart
+  /// final v1 = Validation<String, int>.valid(42).valueOr(0); // 42
+  /// final v2 = Validation<String, int>.invalid(['e']).valueOr(0); // 0
+  /// ```
   T valueOr(T defaultValue) {
     return switch (this) {
       Valid(:final value) => value,
@@ -164,6 +169,13 @@ sealed class Validation<E, T> {
   }
 
   /// Returns the success value if [Valid], otherwise returns the result of [defaultValue].
+  ///
+  /// ```dart
+  /// final v1 = Validation<String, int>.valid(42)
+  ///   .valueOrElse((_) => 0); // 42
+  /// final v2 = Validation<String, int>.invalid(['e'])
+  ///   .valueOrElse((errs) => errs.length); // 1
+  /// ```
   T valueOrElse(T Function(List<E> errors) defaultValue) {
     return switch (this) {
       Valid(:final value) => value,
@@ -172,6 +184,11 @@ sealed class Validation<E, T> {
   }
 
   /// Maps a [Validation<E, T>] to [Validation<E, U>] by applying a function to the success value.
+  ///
+  /// ```dart
+  /// final v = Validation<String, int>.valid(2).map((x) => x * 2);
+  /// print(v); // Valid(4)
+  /// ```
   Validation<E, U> map<U>(U Function(T value) fn) {
     return switch (this) {
       Valid(:final value) => Valid(fn(value)),
@@ -180,6 +197,12 @@ sealed class Validation<E, T> {
   }
 
   /// Maps a [Validation<E, T>] to [Validation<F, T>] by applying a function to the error values.
+  ///
+  /// ```dart
+  /// final inv = Validation<String, int>.invalid(['a', 'b'])
+  ///   .mapErrors((e) => 'E:$e');
+  /// print(inv); // Invalid(['E:a', 'E:b'])
+  /// ```
   Validation<F, T> mapErrors<F>(F Function(E error) fn) {
     return switch (this) {
       Valid(:final value) => Valid(value),
@@ -189,6 +212,12 @@ sealed class Validation<E, T> {
 
   /// Maps the success value with a function that returns a [Validation].
   /// This is also known as flatMap or bind in other languages.
+  ///
+  /// ```dart
+  /// final v = Validation<String, int>.valid(2)
+  ///   .flatMap((x) => x > 1 ? Validation.valid(x * 2) : Validation.invalid(['e']));
+  /// print(v); // Valid(4)
+  /// ```
   Validation<E, U> flatMap<U>(Validation<E, U> Function(T value) fn) {
     return switch (this) {
       Valid(:final value) => fn(value),
@@ -197,6 +226,13 @@ sealed class Validation<E, T> {
   }
 
   /// Executes [fn] if the validation is [Valid] and returns this validation.
+  ///
+  /// ```dart
+  /// final messages = <String>[];
+  /// Validation<String, int>.valid(1)
+  ///   .tap((v) => messages.add('v=$v'));
+  /// // messages contains 'v=1'
+  /// ```
   Validation<E, T> tap(void Function(T value) fn) {
     if (this case Valid(:final value)) {
       fn(value);
@@ -205,6 +241,13 @@ sealed class Validation<E, T> {
   }
 
   /// Executes [fn] if the validation is [Invalid] and returns this validation.
+  ///
+  /// ```dart
+  /// final messages = <String>[];
+  /// Validation<String, int>.invalid(['e'])
+  ///   .tapErrors((errs) => messages.add(errs.first));
+  /// // messages contains 'e'
+  /// ```
   Validation<E, T> tapErrors(void Function(List<E> errors) fn) {
     if (this case Invalid(:final errors)) {
       fn(errors);
@@ -237,6 +280,12 @@ sealed class Validation<E, T> {
       zip(other, fn);
 
   /// Executes [onValid] if the validation is [Valid], or [onInvalid] if it is [Invalid].
+  ///
+  /// ```dart
+  /// final text = Validation<String, int>.valid(2)
+  ///   .fold((v) => 'ok:$v', (errs) => 'err:${errs.length}');
+  /// print(text); // ok:2
+  /// ```
   R fold<R>(R Function(T value) onValid, R Function(List<E> errors) onInvalid) {
     return switch (this) {
       Valid(:final value) => onValid(value),
@@ -245,6 +294,13 @@ sealed class Validation<E, T> {
   }
 
   /// Executes [onValid] if the validation is [Valid], or [onInvalid] if it is [Invalid].
+  ///
+  /// ```dart
+  /// Validation<String, int>.valid(2).match(
+  ///   (v) => print('ok:$v'),
+  ///   (errs) => print('err:${errs.length}'),
+  /// );
+  /// ```
   void match(
     void Function(T value) onValid,
     void Function(List<E> errors) onInvalid,
@@ -259,6 +315,11 @@ sealed class Validation<E, T> {
 
   /// Converts the validation to a [Result].
   /// [Valid] becomes [Ok] and [Invalid] becomes [Err] with the first error.
+  ///
+  /// ```dart
+  /// final r1 = Validation<String, int>.valid(1).toResult(); // Ok(1)
+  /// final r2 = Validation<String, int>.invalid(['e']).toResult(); // Err('e')
+  /// ```
   Result<T, E> toResult() {
     return switch (this) {
       Valid(:final value) => Ok(value),
@@ -267,6 +328,11 @@ sealed class Validation<E, T> {
   }
 
   /// Converts the validation to a [Result] with all errors.
+  ///
+  /// ```dart
+  /// final r = Validation<String, int>.invalid(['a','b']).toResultAll();
+  /// // Err(['a','b'])
+  /// ```
   Result<T, List<E>> toResultAll() {
     return switch (this) {
       Valid(:final value) => Ok(value),

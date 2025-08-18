@@ -1,14 +1,14 @@
-# Resx
+# Resx ⚡️
 
 [![pub package](https://img.shields.io/pub/v/resx.svg)](https://pub.dev/packages/resx)
 [![documentation](https://img.shields.io/badge/documentation-pub.dev-blue.svg)](https://pub.dev/documentation/resx/latest/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-A tiny yet complete functional error handling toolkit for Dart: Result, Option, Validation, AsyncResult, Stream helpers, and a minimal Loadable state.
+A tiny-yet-complete functional error handling toolkit for Dart: Result, Option, Validation, AsyncResult, Stream helpers, and a minimal Loadable state.
 
 **English** | [中文](README_zh.md)
 
-## Features
+## Features ✨
 
 🚀 **High Performance** - Optimized for speed and memory efficiency  
 🔒 **Type Safe** - Full null safety and strong typing  
@@ -18,9 +18,9 @@ A tiny yet complete functional error handling toolkit for Dart: Result, Option, 
 ⚡ **Async Support** - First-class async/await integration  
 🧩 **Extensions** - Native Dart type integrations
 
-## Core Types
+## Core Types 🧠
 
-### Result&lt;T, E&gt; - Error Handling
+### Result&lt;T, E&gt; - Error Handling ✅/❌
 
 Type-safe error handling inspired by Rust's Result type.
 
@@ -51,7 +51,7 @@ final guarded = Result.ok(10).ensure((v) => v > 5, 'Too small');
 final swapped = Result.ok(1).swap(); // Err(1)
 ```
 
-### Option&lt;T&gt; - Nullable Values
+### Option&lt;T&gt; - Nullable Values ❓
 
 Safe nullable value handling with Some/None variants.
 
@@ -64,14 +64,14 @@ final none = Option<String>.none();
 final result = Option.some('world')
   .map((s) => s.toUpperCase())
   .filter((s) => s.length > 3)
-  .orElse(() => 'DEFAULT');
+  .unwrapOr('DEFAULT');
 
 // From nullable
 String? nullable = getValue();
 final option = Option.fromNullable(nullable);
 ```
 
-### Validation&lt;E, T&gt; - Error Accumulation
+### Validation&lt;E, T&gt; - Error Accumulation 🧰
 
 Collect multiple validation errors instead of failing fast.
 
@@ -88,7 +88,7 @@ final userValidation = Validators.notEmpty('John', 'Name required')
 // Result: Invalid(['Email invalid', 'Age invalid'])
 ```
 
-### AsyncResult&lt;T, E&gt; - Async Operations
+### AsyncResult&lt;T, E&gt; - Async Operations ⏱️
 
 First-class async support for Result operations.
 
@@ -111,18 +111,18 @@ final ensured = await AsyncResult.ok<int, String>(10)
   .ensure((v) => v > 0, 'non-positive');
 ```
 
-## Dart Extensions
+## Dart Extensions 🧩
 
-### String Extensions
+### String Extensions 🔤
 
 ```dart
 // Parsing with results
-final number = '42'.parseIntResult(); // Ok(42)
-final invalid = 'abc'.parseIntResult(); // Err('Invalid integer')
+final number = '42'.parseInt(); // Ok(42)
+final invalid = 'abc'.parseInt(); // Err(FormatException)
 
 // Validation
 final email = 'user@example.com'.validateEmail(); // Valid(...)
-final url = 'https://example.com'.validateUrl(); // Valid(...)
+final url = Validators.url('https://example.com'); // Valid(...)
 ```
 
 ### List, Stream and Nullable Extensions
@@ -139,7 +139,7 @@ final asResults = stream.toResultStream<Object>();
 final collected = await stream.collectToResult<Object>();
 ```
 
-### Universal and Nullable Conversions
+### Universal and Nullable Conversions 🔁
 
 ```dart
 String? nullable = getValue();
@@ -153,7 +153,7 @@ final r2 = 'boom'.err<int>();             // Result<int, String>::Err('boom')
 final o1 = 'hello'.some();                // Option<String>::Some('hello')
 ```
 
-## Batch Operations
+## Batch Operations 📦
 
 ```dart
 // Combine multiple results
@@ -172,18 +172,17 @@ final sum = Results.lift2(
 ); // Ok(5)
 ```
 
-## Advanced Usage
+## Advanced Usage 🚀
 
 ### Custom Validators
 
 ```dart
-final customValidator = Validator<String, String>(
-  (value) => value.startsWith('prefix_') 
-    ? Validation.valid(value)
-    : Validation.invalid(['Must start with prefix_']),
-);
-
-final result = customValidator.validate('test'); // Invalid(...)
+// Using built-in predicate helper
+final validation = Validators.predicate<String, String>(
+  'test',
+  (v) => v.startsWith('prefix_'),
+  'Must start with prefix_',
+); // Invalid(['Must start with prefix_'])
 ```
 
 ### Pattern Matching
@@ -192,8 +191,8 @@ final result = customValidator.validate('test'); // Invalid(...)
 final result = Result.ok(42);
 
 final message = result.match(
-  ok: (value) => 'Got value: $value',
-  err: (error) => 'Got error: $error',
+  (value) => 'Got value: $value',
+  (error) => 'Got error: $error',
 );
 ```
 
@@ -211,11 +210,22 @@ final result = pipeline('user input');
 
 ## Performance
 
-Focused API, minimal indirections, idiomatic Dart sealed classes, and extension types. No magic.
+Focused API, minimal indirections, idiomatic Dart sealed classes and extension types. No magic.
 
-## Installing
+## Installation
 
-See https://pub.dev/packages/resx/install.
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  resx: any
+```
+
+Then run:
+
+```bash
+dart pub get
+```
 
 ## Examples
 

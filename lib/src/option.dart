@@ -7,7 +7,7 @@ import 'result.dart';
 /// This is inspired by Rust's Option type and Haskell's Maybe type.
 /// It provides a safe way to handle nullable values without risking null pointer exceptions.
 ///
-/// {@tool snippet}
+///
 ///
 /// ```dart
 /// // Creating Options
@@ -23,39 +23,39 @@ import 'result.dart';
 /// final doubled = some.map((x) => x * 2); // Some(84)
 /// final filtered = some.filter((x) => x > 50); // None
 /// ```
-/// {@end-tool}
+///
 @immutable
 sealed class Option<T> {
   const Option();
 
   /// Creates an Option containing [value].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final option = Option.some('Hello');
   /// print(option.isSome); // true
   /// print(option.value); // 'Hello'
   /// ```
-  /// {@end-tool}
+  ///
   const factory Option.some(T value) = Some<T>;
 
   /// Creates an Option containing no value.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final option = Option.none<String>();
   /// print(option.isNone); // true
   /// print(option.valueOr('default')); // 'default'
   /// ```
-  /// {@end-tool}
+  ///
   const factory Option.none() = None<T>;
 
   /// Creates an Option from a nullable value.
   /// Returns [Some] if [value] is not null, otherwise [None].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// String? nullableString = 'hello';
@@ -64,7 +64,7 @@ sealed class Option<T> {
   /// nullableString = null;
   /// final option2 = Option.fromNullable(nullableString); // None
   /// ```
-  /// {@end-tool}
+  ///
   factory Option.fromNullable(T? value) {
     return value != null ? Some(value) : None<T>();
   }
@@ -87,7 +87,7 @@ sealed class Option<T> {
 
   /// Returns `true` if the option is [Some].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -96,12 +96,12 @@ sealed class Option<T> {
   /// print(some.isSome); // true
   /// print(none.isSome); // false
   /// ```
-  /// {@end-tool}
+  ///
   bool get isSome => this is Some<T>;
 
   /// Returns `true` if the option is [None].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -110,12 +110,12 @@ sealed class Option<T> {
   /// print(some.isNone); // false
   /// print(none.isNone); // true
   /// ```
-  /// {@end-tool}
+  ///
   bool get isNone => this is None<T>;
 
   /// Returns the value if [Some], otherwise throws.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -124,7 +124,7 @@ sealed class Option<T> {
   /// final none = Option.none<int>();
   /// // none.value; // throws StateError
   /// ```
-  /// {@end-tool}
+  ///
   T get value {
     return switch (this) {
       Some(:final value) => value,
@@ -134,7 +134,7 @@ sealed class Option<T> {
 
   /// Returns the value if [Some], otherwise returns [defaultValue].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -143,7 +143,7 @@ sealed class Option<T> {
   /// print(some.valueOr(0)); // 42
   /// print(none.valueOr(0)); // 0
   /// ```
-  /// {@end-tool}
+  ///
   T valueOr(T defaultValue) {
     return switch (this) {
       Some(:final value) => value,
@@ -153,7 +153,7 @@ sealed class Option<T> {
 
   /// Returns the value if [Some], otherwise returns the result of [defaultValue].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -162,7 +162,7 @@ sealed class Option<T> {
   /// print(some.valueOrElse(() => 0)); // 42
   /// print(none.valueOrElse(() => DateTime.now().millisecond)); // dynamic default
   /// ```
-  /// {@end-tool}
+  ///
   T valueOrElse(T Function() defaultValue) {
     return switch (this) {
       Some(:final value) => value,
@@ -172,7 +172,7 @@ sealed class Option<T> {
 
   /// Maps an [Option<T>] to [Option<U>] by applying a function to the contained value.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(5);
@@ -183,7 +183,7 @@ sealed class Option<T> {
   /// final mapped = none.map((x) => x * 2);
   /// print(mapped); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<U> map<U>(U Function(T value) fn) {
     return switch (this) {
       Some(:final value) => Some(fn(value)),
@@ -194,7 +194,7 @@ sealed class Option<T> {
   /// Maps the value with a function that returns an [Option].
   /// This is also known as flatMap or bind in other languages.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some('42');
@@ -217,7 +217,7 @@ sealed class Option<T> {
   /// });
   /// print(failed); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<U> flatMap<U>(Option<U> Function(T value) fn) {
     return switch (this) {
       Some(:final value) => fn(value),
@@ -227,7 +227,7 @@ sealed class Option<T> {
 
   /// Executes [fn] if the option is [Some] and returns this option.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -238,7 +238,7 @@ sealed class Option<T> {
   /// none.tap((value) => print('This won\'t print'));
   /// // none is still None
   /// ```
-  /// {@end-tool}
+  ///
   Option<T> tap(void Function(T value) fn) {
     if (this case Some(:final value)) {
       fn(value);
@@ -248,7 +248,7 @@ sealed class Option<T> {
 
   /// Returns this option if it is [Some], otherwise returns [other].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -258,7 +258,7 @@ sealed class Option<T> {
   /// final none = Option.none<int>();
   /// print(none.or(backup)); // Some(0)
   /// ```
-  /// {@end-tool}
+  ///
   Option<T> or(Option<T> other) {
     return switch (this) {
       Some() => this,
@@ -268,7 +268,7 @@ sealed class Option<T> {
 
   /// Returns this option if it is [Some], otherwise returns the result of [other].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -277,7 +277,7 @@ sealed class Option<T> {
   /// final none = Option.none<int>();
   /// print(none.orElse(() => Option.some(-1))); // Some(-1)
   /// ```
-  /// {@end-tool}
+  ///
   Option<T> orElse(Option<T> Function() other) {
     return switch (this) {
       Some() => this,
@@ -287,7 +287,7 @@ sealed class Option<T> {
 
   /// Returns [other] if this option is [Some], otherwise returns [None].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -297,7 +297,7 @@ sealed class Option<T> {
   /// final none = Option.none<int>();
   /// print(none.and(next)); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<U> and<U>(Option<U> other) {
     return switch (this) {
       Some() => other,
@@ -307,7 +307,7 @@ sealed class Option<T> {
 
   /// Returns the result of [other] if this option is [Some], otherwise returns [None].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(5);
@@ -318,7 +318,7 @@ sealed class Option<T> {
   /// final processed = none.andThen((value) => Option.some(value * 2));
   /// print(processed); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<U> andThen<U>(Option<U> Function(T value) other) {
     return switch (this) {
       Some(:final value) => other(value),
@@ -347,7 +347,7 @@ sealed class Option<T> {
   /// Filters the option based on a predicate.
   /// Returns [Some] if the predicate returns true, otherwise [None].
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(5);
@@ -361,7 +361,7 @@ sealed class Option<T> {
   /// final stillNone = none.filter((x) => x > 0);
   /// print(stillNone); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<T> filter(bool Function(T value) predicate) {
     return switch (this) {
       Some(:final value) when predicate(value) => this,
@@ -396,7 +396,7 @@ sealed class Option<T> {
   /// Converts the option to a [Result].
   /// Returns [Ok] if [Some], otherwise [Err] with the provided error.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(42);
@@ -407,7 +407,7 @@ sealed class Option<T> {
   /// final error = none.toResult('Value missing');
   /// print(error); // Err('Value missing')
   /// ```
-  /// {@end-tool}
+  ///
   Result<T, E> toResult<E>(E error) {
     return switch (this) {
       Some(:final value) => Ok(value),
@@ -443,7 +443,7 @@ sealed class Option<T> {
 
   /// Flattens a nested Option.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final nested = Option.some(Option.some(42));
@@ -454,7 +454,7 @@ sealed class Option<T> {
   /// final flattenedNone = nestedNone.flatten();
   /// print(flattenedNone); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<U> flatten<U>() {
     return switch (this) {
       Some(:final value) when value is Option<U> => value as Option<U>,
@@ -467,7 +467,7 @@ sealed class Option<T> {
 
   /// Combines two Options into one containing a tuple.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final a = Option.some(1);
@@ -479,7 +479,7 @@ sealed class Option<T> {
   /// final zippedNone = a.zip(c);
   /// print(zippedNone); // None
   /// ```
-  /// {@end-tool}
+  ///
   Option<(T, U)> zip<U>(Option<U> other) {
     return switch (this) {
       Some(:final value) => switch (other) {
@@ -492,7 +492,7 @@ sealed class Option<T> {
 
   /// Combines two Options using a function.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final a = Option.some(1);
@@ -500,14 +500,14 @@ sealed class Option<T> {
   /// final combined = a.zipWith(b, (x, y) => x + y);
   /// print(combined); // Some(3)
   /// ```
-  /// {@end-tool}
+  ///
   Option<R> zipWith<U, R>(Option<U> other, R Function(T, U) fn) {
     return zip(other).map((tuple) => fn(tuple.$1, tuple.$2));
   }
 
   /// Performs a side effect without changing the Option.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final result = Option.some(42)
@@ -516,7 +516,7 @@ sealed class Option<T> {
   /// // Prints: Value: 42
   /// print(result); // Some(84)
   /// ```
-  /// {@end-tool}
+  ///
   Option<T> inspect(void Function(T value) fn) {
     return switch (this) {
       Some(:final value) => () {
@@ -529,7 +529,7 @@ sealed class Option<T> {
 
   /// Transposes an Option of a Result into a Result of an Option.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final some = Option.some(Result.ok(42));
@@ -544,7 +544,7 @@ sealed class Option<T> {
   /// final transposedNone = none.transpose();
   /// print(transposedNone); // Ok(None)
   /// ```
-  /// {@end-tool}
+  ///
   Result<Option<U>, E> transpose<U, E>() {
     return switch (this) {
       Some(:final value) when value is Result<U, E> => () {
@@ -597,6 +597,16 @@ abstract final class Options {
 
   /// Combines multiple Options into a single Option containing a list.
   /// Returns [Some] with all values if all options are [Some], otherwise returns [None].
+  ///
+  /// ```dart
+  /// final options = [Option.some(1), Option.some(2)];
+  /// final combined = Options.combine(options);
+  /// print(combined); // Some([1, 2])
+  ///
+  /// final withNone = [Option.some(1), Option.none<int>()];
+  /// final failed = Options.combine(withNone);
+  /// print(failed); // None
+  /// ```
   static Option<List<T>> combine<T>(Iterable<Option<T>> options) {
     final values = <T>[];
     for (final option in options) {
@@ -612,6 +622,12 @@ abstract final class Options {
 
   /// Combines multiple Options and collects all values.
   /// Returns a list of all [Some] values, ignoring [None] values.
+  ///
+  /// ```dart
+  /// final options = [Option.some(1), Option.none<int>(), Option.some(3)];
+  /// final values = Options.combineAll(options);
+  /// print(values); // [1, 3]
+  /// ```
   static List<T> combineAll<T>(Iterable<Option<T>> options) {
     final values = <T>[];
     for (final option in options) {
@@ -665,7 +681,7 @@ abstract final class Options {
   /// Partitions a list of Options into Some values and None count.
   /// Inspired by Haskell's `partitionEithers`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final options = [Option.some(1), Option.none<int>(), Option.some(2)];
@@ -673,7 +689,7 @@ abstract final class Options {
   /// print(values); // [1, 2]
   /// print(noneCount); // 1
   /// ```
-  /// {@end-tool}
+  ///
   static (List<T>, int) partition<T>(Iterable<Option<T>> options) {
     final values = <T>[];
     var noneCount = 0;
@@ -693,14 +709,14 @@ abstract final class Options {
   /// Collects all Some values, ignoring None values.
   /// Similar to Rust's `Iterator::filter_map`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final options = [Option.some(1), Option.none<int>(), Option.some(2)];
   /// final values = Options.collectSome(options);
   /// print(values); // [1, 2]
   /// ```
-  /// {@end-tool}
+  ///
   static List<T> collectSome<T>(Iterable<Option<T>> options) {
     return options
         .where((o) => o.isSome)
@@ -711,7 +727,7 @@ abstract final class Options {
   /// Applies a function that may fail to each element, short-circuiting on first None.
   /// Similar to Haskell's `mapM`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final numbers = [1, 2, 3];
@@ -721,7 +737,7 @@ abstract final class Options {
   /// );
   /// print(doubled); // Some([2, 4, 6])
   /// ```
-  /// {@end-tool}
+  ///
   static Option<List<U>> mapM<T, U>(
     Iterable<T> values,
     Option<U> Function(T) fn,
@@ -731,7 +747,7 @@ abstract final class Options {
   /// Folds over a list of Options, accumulating values.
   /// Similar to Haskell's `foldM`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final options = [Option.some(1), Option.some(2), Option.some(3)];
@@ -742,7 +758,7 @@ abstract final class Options {
   /// );
   /// print(sum); // Some(6)
   /// ```
-  /// {@end-tool}
+  ///
   static Option<U> foldM<T, U>(
     Iterable<Option<T>> options,
     U initial,
@@ -769,7 +785,7 @@ abstract final class Options {
   /// Creates an Option by applying a predicate to a value.
   /// Similar to filtering patterns in functional programming.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final positive = Options.fromPredicate(5, (n) => n > 0);
@@ -778,7 +794,7 @@ abstract final class Options {
   /// final negative = Options.fromPredicate(-1, (n) => n > 0);
   /// print(negative); // None
   /// ```
-  /// {@end-tool}
+  ///
   static Option<T> fromPredicate<T>(T value, bool Function(T) predicate) {
     return predicate(value) ? Some(value) : None<T>();
   }
@@ -786,21 +802,21 @@ abstract final class Options {
   /// Sequences a list of Options into an Option of a list.
   /// Similar to Haskell's `sequence`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final options = [Option.some(1), Option.some(2), Option.some(3)];
   /// final sequenced = Options.sequence(options);
   /// print(sequenced); // Some([1, 2, 3])
   /// ```
-  /// {@end-tool}
+  ///
   static Option<List<T>> sequence<T>(Iterable<Option<T>> options) =>
       combine(options);
 
   /// Returns the first Some value, or None if all are None.
   /// Similar to the "alternative" pattern in functional programming.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final options = [Option.none<int>(), Option.some(42), Option.some(10)];
@@ -811,7 +827,7 @@ abstract final class Options {
   /// final empty = Options.firstSome(allNone);
   /// print(empty); // None
   /// ```
-  /// {@end-tool}
+  ///
   static Option<T> firstSome<T>(Iterable<Option<T>> options) {
     for (final option in options) {
       if (option case Some()) {
@@ -823,14 +839,14 @@ abstract final class Options {
 
   /// Returns the last Some value, or None if all are None.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final options = [Option.some(1), Option.none<int>(), Option.some(42)];
   /// final last = Options.lastSome(options);
   /// print(last); // Some(42)
   /// ```
-  /// {@end-tool}
+  ///
   static Option<T> lastSome<T>(Iterable<Option<T>> options) {
     Option<T> result = None<T>();
     for (final option in options) {
@@ -844,7 +860,7 @@ abstract final class Options {
   /// Flattens an Option of Option into a single Option.
   /// Similar to Haskell's `join`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final nested = Option.some(Option.some(42));
@@ -855,7 +871,7 @@ abstract final class Options {
   /// final flattenedNone = Options.flatten(nestedNone);
   /// print(flattenedNone); // None
   /// ```
-  /// {@end-tool}
+  ///
   static Option<T> flatten<T>(Option<Option<T>> nested) {
     return switch (nested) {
       Some(:final value) => value,
@@ -866,7 +882,7 @@ abstract final class Options {
   /// Creates an Option that contains the provided value if the condition is true.
   /// Useful for conditional Option creation.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final option1 = Options.when(true, () => 42);
@@ -875,7 +891,7 @@ abstract final class Options {
   /// final option2 = Options.when(false, () => 42);
   /// print(option2); // None
   /// ```
-  /// {@end-tool}
+  ///
   static Option<T> when<T>(bool condition, T Function() value) {
     return condition ? Some(value()) : None<T>();
   }
@@ -883,7 +899,7 @@ abstract final class Options {
   /// Creates an Option that contains the provided value if the condition is true.
   /// Non-lazy version of `when`.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final option1 = Options.guard(true, 42);
@@ -892,7 +908,7 @@ abstract final class Options {
   /// final option2 = Options.guard(false, 42);
   /// print(option2); // None
   /// ```
-  /// {@end-tool}
+  ///
   static Option<T> guard<T>(bool condition, T value) {
     return condition ? Some(value) : None<T>();
   }
@@ -908,7 +924,7 @@ abstract final class Options {
   /// Zips two Options together.
   /// Returns Some with a tuple if both Options are Some, otherwise None.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final a = Option.some(1);
@@ -920,7 +936,7 @@ abstract final class Options {
   /// final failed = Options.zip(none, b);
   /// print(failed); // None
   /// ```
-  /// {@end-tool}
+  ///
   static Option<(A, B)> zip<A, B>(Option<A> a, Option<B> b) {
     return switch ((a, b)) {
       (Some(:final value), Some(value: final valueB)) => Some((value, valueB)),
@@ -947,7 +963,7 @@ abstract final class Options {
 
   /// Unzips an Option of tuple into a tuple of Options.
   ///
-  /// {@tool snippet}
+  ///
   ///
   /// ```dart
   /// final zipped = Option.some((1, 'hello'));
@@ -960,7 +976,7 @@ abstract final class Options {
   /// print(noneA); // None
   /// print(noneB); // None
   /// ```
-  /// {@end-tool}
+  ///
   static (Option<A>, Option<B>) unzip<A, B>(Option<(A, B)> option) {
     return switch (option) {
       Some(:final value) => (Some(value.$1), Some(value.$2)),
