@@ -4,7 +4,9 @@
 [![documentation](https://img.shields.io/badge/documentation-pub.dev-blue.svg)](https://pub.dev/documentation/resx/latest/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-一个小而全的 Dart 函数式错误处理工具集：Result、Option、Validation、AsyncResult、Stream 帮助器与极简 Loadable 状态。
+一个轻量而完整的 Dart 函数式错误处理工具包，提供 Result、Option、Validation、AsyncResult、流工具方法，以及一个极简的 Loadable 状态管理
+
+> **小巧、完整、函数式**
 
 [English](README.md) | **中文**
 

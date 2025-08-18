@@ -4,7 +4,9 @@
 [![documentation](https://img.shields.io/badge/documentation-pub.dev-blue.svg)](https://pub.dev/documentation/resx/latest/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 
-A tiny-yet-complete functional error handling toolkit for Dart: Result, Option, Validation, AsyncResult, Stream helpers, and a minimal Loadable state.
+A lightweight and complete functional error-handling toolkit for Dart, featuring Result, Option, Validation, AsyncResult, stream utilities, and a minimal Loadable state.
+
+> **Tiny, complete, and functional.**
 
 **English** | [中文](README_zh.md)
 
