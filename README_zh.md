@@ -295,18 +295,7 @@ AppState handleUsersLoaded(AppState state, Result<List<User>, String> result) {
 
 ## 安装
 
-添加到你的 `pubspec.yaml`:
-
-```yaml
-dependencies:
-  resx: ^0.3.0
-```
-
-然后运行:
-
-```bash
-dart pub get
-```
+查阅 https://pub-web.flutter-io.cn/packages/resx/install 。
 
 ## 示例
 
@@ -329,4 +318,4 @@ dart pub get
 
 ---
 
-为 Dart 社区用 ❤️ 制作
+由 FlutterCandies 以 💙 制作
